@@ -1,0 +1,75 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:res.user:"
+msgid "Please input a diferent password."
+msgstr "Por favor, introducir una contraseña distinta."
+
+msgctxt "error:res.user:"
+msgid ""
+"The supplied password is not strength enought, please use a diferent "
+"password."
+msgstr ""
+"La contraseña introducida es demasiado débil. Por favor, utilizad una "
+"contraseña distinta."
+
+msgctxt "error:res.user:"
+msgid ""
+"Your new password of tryton server %(hostname)s is %(new_password)s please "
+"login in order to change it."
+msgstr ""
+"Vuestra nueva contraseña del servidor de tryton %(hostname)s es "
+"%(new_password)s por favor entra para cambiarla."
+
+msgctxt "error:res.user:"
+msgid ""
+"Your password has expired, please change it to a new one from user "
+"preferences."
+msgstr ""
+"Vuestra contraseña ha caducado, por favor cambiadla desde la preferencias de"
+" usuario."
+
+msgctxt "error:res.user:"
+msgid "Your password have been changed."
+msgstr "Tu contraseña se ha modificado."
+
+msgctxt "field:res.user,last_change_date:"
+msgid "Last Change Date"
+msgstr "Ultima fecha de cambio."
+
+msgctxt "field:res.user.expired_password.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:res.user.expired_password.start,old_password:"
+msgid "Old Password"
+msgstr "Contraseña anterior"
+
+msgctxt "field:res.user.expired_password.start,password:"
+msgid "Password"
+msgstr "Contraseña"
+
+msgctxt "model:ir.action,name:wizard_expired_password"
+msgid "Expired Password"
+msgstr "Contraseña caducada"
+
+msgctxt "model:res.user.expired_password.start,name:"
+msgid "Expired Password Start"
+msgstr "Inicio contraseña caducada"
+
+msgctxt "view:res.user.expired_password.start:"
+msgid "Expired Password"
+msgstr "Contraseña caducada"
+
+msgctxt "view:res.user.expired_password.start:"
+msgid "Your password have expired. Please introduce a new one"
+msgstr "Vuestra contraseña ha caducado. Por favor, introducid una de nueva. "
+
+msgctxt "view:res.user:"
+msgid "Reset Password"
+msgstr "Reiniciar contraseña"
+
+msgctxt "wizard_button:res.user.expired_password,start,set_password:"
+msgid "Change Password"
+msgstr "Cambiar contraseña"

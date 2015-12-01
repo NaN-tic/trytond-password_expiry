@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="user_view_form">
+            <field name="model">res.user</field>
+            <field name="inherit" ref="res.user_view_form"/>
+            <field name="name">user_form</field>
+        </record>
+        <record model="ir.ui.view" id="expired_password_start_view_form">
+            <field name="model">res.user.expired_password.start</field>
+            <field name="type">form</field>
+            <field name="name">expired_password_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wizard_expired_password">
+            <field name="name">Expired Password</field>
+            <field name="wiz_name">res.user.expired_password</field>
+        </record>
+    </data>
+</tryton>
