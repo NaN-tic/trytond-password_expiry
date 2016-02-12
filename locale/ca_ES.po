@@ -11,7 +11,7 @@ msgid ""
 "The supplied password is not strength enought, please use a diferent "
 "password."
 msgstr ""
-"La contrasenya que heu introduït es molt dèbil, si us plau utilitzeu una "
+"La contrasenya que heu introduït és molt dèbil, si us plau utilitzeu una "
 "contrasenya diferent."
 
 msgctxt "error:res.user:"
