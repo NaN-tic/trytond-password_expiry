@@ -17,5 +17,51 @@
             <field name="name">Expired Password</field>
             <field name="wiz_name">res.user.expired_password</field>
         </record>
+
+        <!-- password.configuration -->
+        <record model="ir.ui.view" id="password_configuration_view_form">
+            <field name="model">password.configuration</field>
+            <field name="type">form</field>
+            <field name="name">password_configuration_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_password_configuration_form">
+            <field name="name">Password Configuration</field>
+            <field name="res_model">password.configuration</field>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_password_configuration_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="password_configuration_view_form"/>
+            <field name="act_window" ref="act_password_configuration_form"/>
+        </record>
+
+        <menuitem id="menu_user_configuration"
+            name="Configuration"
+            sequence="0"
+            parent="res.menu_res"/>
+
+        <menuitem
+                id="menu_password_configuration"
+                name="Password Configuration"
+                parent="menu_user_configuration"
+                action="act_password_configuration_form" icon="tryton-list"/>
+
+        <record model="ir.model.access" id="access_password_password_administration">
+            <field name="model" search="[('model', '=', 'password.configuration')]"/>
+            <field name="group" ref="res.group_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <record model="ir.model.access" id="access_password_configuration">
+            <field name="model" search="[('model', '=', 'password.configuration')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
     </data>
 </tryton>

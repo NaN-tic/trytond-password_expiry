@@ -8,6 +8,7 @@ def register():
     Pool.register(
         User,
         ExpiredPasswordStart,
+        PasswordConfiguration,
         module='password_expiry', type_='model')
     Pool.register(
         ExpiredPassword,

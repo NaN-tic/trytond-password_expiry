@@ -8,18 +8,35 @@ from email.mime.text import MIMEText
 from email.header import Header
 from trytond.cache import Cache
 from trytond.config import config
-from trytond.model import fields, ModelView
+from trytond.model import fields, ModelView, ModelSQL, ModelSingleton
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.url import HOSTNAME
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 
-EXPIRY_DAYS = config.getint('security', 'password_expiry_days', 365)
-PASSWORD_FACTOR = config.getfloat('security', 'password_factor', 0.75)
+# EXPIRY_DAYS = config.getint('security', 'password_expiry_days', 365)
+# PASSWORD_FACTOR = config.getfloat('security', 'password_factor', 0.75)
 
-__all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
+__all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword',
+    'PasswordConfiguration']
 __metaclass__ = PoolMeta
+
+
+class PasswordConfiguration(ModelSingleton, ModelView, ModelSQL):
+    "Password Configuration"
+    __name__ = "password.configuration"
+
+    expiry_days = fields.Integer('Expiry Days')
+    factor = fields.Float('Password Factor')
+    letters = fields.Integer('Quantity of Characters')
+    numbers = fields.Integer('Quantity of Numbers')
+    punctuations = fields.Integer('Quantity of Symbols')
+    logout_time = fields.Function(fields.Integer('Logout Time'),
+        'get_logout_time')
+
+    def get_logout_time(self, name):
+        return config.getint('session', 'timeout')
 
 
 class User:
@@ -80,9 +97,11 @@ class User:
     def get_preferences(cls, context_only=False):
         pool = Pool()
         ModelData = pool.get('ir.model.data')
+        Config = pool.get('password.configuration')
+        config = Config(1)
         preferences = super(User, cls).get_preferences(context_only)
         date = cls._get_last_change_date()
-        if (datetime.datetime.now() - date).days > EXPIRY_DAYS:
+        if (datetime.datetime.now() - date).days > config.expiry_days:
             actions = preferences.get('actions', [])
             actions.insert(0, ModelData.get_id('password_expiry',
                     'wizard_expired_password'))
@@ -117,17 +136,21 @@ class User:
             logger.warn('Unable to check password strenght. Please install '
                 'passwordmetter library')
             return
+        Config = Pool().get('password.configuration')
+        config = Config(1)
         strenght, suggestions = passwordmeter.test(password)
-        if strenght < PASSWORD_FACTOR:
+        if strenght < config.factor:
             cls.raise_user_error('password_strength')
 
     @staticmethod
     def generate_new_password():
+        Config = Pool().get('password.configuration')
+        config = Config(1)
         characters = []
         for number, options in [
-                (8, string.ascii_letters),
-                (2, string.digits),
-                (2, string.punctuation),
+                (config.letters, string.ascii_letters),
+                (config.numbers, string.digits),
+                (config.punctuations, string.punctuation),
                 ]:
             characters += [random.choice(options) for x in range(number)]
         random.shuffle(characters)

@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
@@ -34,6 +34,54 @@ msgctxt "error:res.user:"
 msgid "Your password have been changed."
 msgstr "Tu contraseña se ha modificado."
 
+msgctxt "field:password.configuration,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:password.configuration,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:password.configuration,expiry_days:"
+msgid "Expiry Days"
+msgstr "Días de vencimiento"
+
+msgctxt "field:password.configuration,factor:"
+msgid "Password Factor"
+msgstr "Factor de la contraseña"
+
+msgctxt "field:password.configuration,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:password.configuration,letters:"
+msgid "Quantity of Characters"
+msgstr "Cantidad de carácteres"
+
+msgctxt "field:password.configuration,logout_time:"
+msgid "Logout Time"
+msgstr "Tiempo de salida"
+
+msgctxt "field:password.configuration,numbers:"
+msgid "Quantity of Numbers"
+msgstr "Cantidad de dígitos"
+
+msgctxt "field:password.configuration,punctuations:"
+msgid "Quantity of Symbols"
+msgstr "Cantidad de símbolos"
+
+msgctxt "field:password.configuration,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:password.configuration,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:password.configuration,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:res.user,last_change_date:"
 msgid "Last Change Date"
 msgstr "Ultima fecha de cambio."
@@ -50,9 +98,25 @@ msgctxt "field:res.user.expired_password.start,password:"
 msgid "Password"
 msgstr "Contraseña"
 
+msgctxt "model:ir.action,name:act_password_configuration_form"
+msgid "Password Configuration"
+msgstr "Configuración de la contraseña"
+
 msgctxt "model:ir.action,name:wizard_expired_password"
 msgid "Expired Password"
 msgstr "Contraseña caducada"
+
+msgctxt "model:ir.ui.menu,name:menu_password_configuration"
+msgid "Password Configuration"
+msgstr "Configuración de la contraseña"
+
+msgctxt "model:ir.ui.menu,name:menu_user_configuration"
+msgid "Configuration"
+msgstr "Configuración"
+
+msgctxt "model:password.configuration,name:"
+msgid "Password Configuration"
+msgstr "Configuración de la contraseña"
 
 msgctxt "model:res.user.expired_password.start,name:"
 msgid "Expired Password Start"
