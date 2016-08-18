@@ -15,8 +15,8 @@ from trytond.tools import get_smtp_server
 from trytond.url import HOSTNAME
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 
-EXPIRY_DAYS = config.getint('security', 'password_expiry_days', 365)
-PASSWORD_FACTOR = config.getfloat('security', 'password_factor', 0.75)
+EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
+PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
 
 __all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
 __metaclass__ = PoolMeta
