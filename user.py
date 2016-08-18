@@ -115,7 +115,7 @@ class User:
         except ImportError:
             logger = logging.getLogger('res.user')
             logger.warn('Unable to check password strenght. Please install '
-                'passwordmetter library')
+                'passwordmeter library')
             return
         strenght, suggestions = passwordmeter.test(password)
         if strenght < PASSWORD_FACTOR:
