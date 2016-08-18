@@ -96,7 +96,7 @@ class User:
         result = cls._get_last_change_cache.get(login)
         if result:
             return result
-        cursor = Transaction().cursor
+        cursor = Transaction().connection.cursor()
         table = cls.__table__()
         cursor.execute(*table.select(table.last_change_date,
                 where=(table.login == login) & table.active))
