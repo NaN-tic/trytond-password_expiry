@@ -60,18 +60,8 @@ class TestCase(ModuleTestCase):
 
         new_complex_password = 'Tryton.45321908!'
         with Transaction().set_user(user.id):
-            with self.assertRaises(UserError) as cm:
-                User.set_preferences({
-                        'password': complex_password,
-                        }, {
-                        'password': complex_password,
-                        })
-            self.assertEqual(cm.exception.message, 'Please input a '
-                'different password.')
             User.set_preferences({
                     'password': new_complex_password,
-                    }, {
-                    'password': complex_password,
                     })
         user_id = User.get_login('user', {
                 'password': complex_password,

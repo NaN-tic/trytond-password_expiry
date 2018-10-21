@@ -3,10 +3,6 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:res.user:"
-msgid "Please input a different password."
-msgstr "Si us plau, introduïu una contrasenya diferent."
-
-msgctxt "error:res.user:"
 msgid ""
 "The supplied password is not strongh enough, please use a different "
 "one."

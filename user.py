@@ -37,7 +37,6 @@ class User(metaclass=PoolMeta):
                     'change it to a new one from user preferences.'),
                 'password_strength': ('The supplied password is not strong '
                     'enough, please use a different one.'),
-                'different_password': ('Please input a different password.'),
                 'new_password_title': ('Your password has been changed.'),
                 'new_password_body': ('Your new password of Tryton server'
                     ' %(hostname)s is %(new_password)s please login in order '
@@ -49,12 +48,9 @@ class User(metaclass=PoolMeta):
         return datetime.datetime.now()
 
     @classmethod
-    def set_preferences(cls, values, parameters):
-        if (values.get('password')
-                and values.get('password') == parameters.get('password')):
-            cls.raise_user_error('different_password')
+    def set_preferences(cls, values):
         with Transaction().set_context(from_preferences=True):
-            super(User, cls).set_preferences(values, parameters)
+            super(User, cls).set_preferences(values)
 
     @classmethod
     def set_password(cls, users, name, value):
@@ -219,8 +215,7 @@ class ExpiredPassword(Wizard):
     def transition_set_password(self):
         pool = Pool()
         User = pool.get('res.user')
-        User.set_preferences({'password': self.start.password},
-            old_password=self.start.old_password)
+        User.set_preferences({'password': self.start.password})
         return 'end'
 
     def end(self):
