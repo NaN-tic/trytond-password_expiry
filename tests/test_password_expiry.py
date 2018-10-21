@@ -32,21 +32,25 @@ class TestCase(ModuleTestCase):
         with self.assertRaises(UserError) as cm:
             self.create_user('user', '12345')
         self.assertEqual(cm.exception.message, 'The supplied password is '
-            'not strength enought, please use a diferent password.')
+            'not strong enough, please use a different one.')
 
-        complex_password = 'Tryton45.Foundation'
+        complex_password = 'Tryton.45321908*'
 
         self.create_user('user', complex_password)
 
         user, = User.search([('login', '=', 'user')])
-        user_id = User.get_login('user', complex_password)
+        user_id = User.get_login('user', {
+                'password': complex_password,
+                })
         self.assertEqual(user_id, user.id)
 
         # Expire the password
         user.last_change_date = datetime.datetime.min
         user.save()
 
-        user_id = User.get_login('user', complex_password)
+        user_id = User.get_login('user', {
+                'password': complex_password,
+                })
         self.assertEqual(user_id, user.id)
         with Transaction().set_user(user_id):
             actions = User.get_preferences()['actions']
@@ -54,18 +58,28 @@ class TestCase(ModuleTestCase):
             'wizard_expired_password')
         self.assertEqual(actions[0], expired_password_action)
 
-        new_complex_password = 'Foundation.Tryton45'
+        new_complex_password = 'Tryton.45321908!'
         with Transaction().set_user(user.id):
             with self.assertRaises(UserError) as cm:
-                User.set_preferences({'password': complex_password},
-                    old_password=complex_password)
+                User.set_preferences({
+                        'password': complex_password,
+                        }, {
+                        'password': complex_password,
+                        })
             self.assertEqual(cm.exception.message, 'Please input a '
-                'diferent password.')
-            User.set_preferences({'password': new_complex_password},
-                old_password=complex_password)
-        user_id = User.get_login('user', complex_password)
-        self.assertEqual(user_id, 0)
-        user_id = User.get_login('user', new_complex_password)
+                'different password.')
+            User.set_preferences({
+                    'password': new_complex_password,
+                    }, {
+                    'password': complex_password,
+                    })
+        user_id = User.get_login('user', {
+                'password': complex_password,
+                })
+        self.assertEqual(user_id, None)
+        user_id = User.get_login('user', {
+                'password': new_complex_password,
+                })
         self.assertEqual(user_id, user.id)
 
         User.reset_password([user])
@@ -75,8 +89,10 @@ class TestCase(ModuleTestCase):
         self.assertEqual(actions[0], expired_password_action)
 
         # Nothing is raised if user does not exist
-        user_id = User.get_login('login', complex_password)
-        self.assertEqual(user_id, 0)
+        user_id = User.get_login('login', {
+                'password': complex_password,
+                })
+        self.assertEqual(user_id, None)
 
 
 def suite():

@@ -36,11 +36,11 @@ class User:
         cls._error_messages.update({
                 'password_expired': ('Your password has expired, please '
                     'change it to a new one from user preferences.'),
-                'password_strength': ('The supplied password is not strength '
-                    'enought, please use a diferent password.'),
-                'diferent_password': ('Please input a diferent password.'),
-                'new_password_title': ('Your password have been changed.'),
-                'new_password_body': ('Your new password of tryton server'
+                'password_strength': ('The supplied password is not strong '
+                    'enough, please use a different one.'),
+                'different_password': ('Please input a different password.'),
+                'new_password_title': ('Your password has been changed.'),
+                'new_password_body': ('Your new password of Tryton server'
                     ' %(hostname)s is %(new_password)s please login in order '
                     'to change it.'),
                 })
@@ -50,11 +50,12 @@ class User:
         return datetime.datetime.now()
 
     @classmethod
-    def set_preferences(cls, values, old_password=False):
-        if values.get('password') and values.get('password') == old_password:
-            cls.raise_user_error('diferent_password')
+    def set_preferences(cls, values, parameters):
+        if (values.get('password')
+                and values.get('password') == parameters.get('password')):
+            cls.raise_user_error('different_password')
         with Transaction().set_context(from_preferences=True):
-            super(User, cls).set_preferences(values, old_password)
+            super(User, cls).set_preferences(values, parameters)
 
     @classmethod
     def set_password(cls, users, name, value):
