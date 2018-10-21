@@ -220,8 +220,11 @@ class ExpiredPassword(Wizard):
     def transition_set_password(self):
         pool = Pool()
         User = pool.get('res.user')
-        User.set_preferences({'password': self.start.password},
-            old_password=self.start.old_password)
+        User.set_preferences({
+                'password': self.start.password,
+                }, {
+                'password': self.start.old_password,
+                })
         return 'end'
 
     def end(self):
