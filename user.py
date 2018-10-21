@@ -19,10 +19,9 @@ EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
 PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
 
 __all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
-__metaclass__ = PoolMeta
 
 
-class User:
+class User(metaclass=PoolMeta):
     __name__ = "res.user"
     last_change_date = fields.DateTime('Last Change Date', required=True)
     _get_last_change_cache = Cache('res_user.last_change_date', context=False)
@@ -177,7 +176,7 @@ class User:
                 server = get_smtp_server()
                 server.sendmail(from_addr, to_addr, msg.as_string())
                 server.quit()
-            except Exception, exception:
+            except Exception as exception:
                 logger.error('Unable to deliver email (%s):\n %s'
                     % (exception, msg.as_string()))
 
