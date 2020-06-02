@@ -14,6 +14,8 @@ from trytond.transaction import Transaction
 from trytond.tools import get_smtp_server
 from trytond.url import HOSTNAME
 from trytond.wizard import Wizard, StateView, StateTransition, Button
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
 PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
@@ -31,16 +33,6 @@ class User(metaclass=PoolMeta):
         super(User, cls).__setup__()
         cls._buttons.update({
                 'reset_password': {},
-                })
-        cls._error_messages.update({
-                'password_expired': ('Your password has expired, please '
-                    'change it to a new one from user preferences.'),
-                'password_strength': ('The supplied password is not strong '
-                    'enough, please use a different one.'),
-                'new_password_title': ('Your password has been changed.'),
-                'new_password_body': ('Your new password of Tryton server'
-                    ' %(hostname)s is %(new_password)s please login in order '
-                    'to change it.'),
                 })
 
     @staticmethod
@@ -115,7 +107,7 @@ class User(metaclass=PoolMeta):
             return
         strenght, suggestions = passwordmeter.test(password)
         if strenght < PASSWORD_FACTOR:
-            cls.raise_user_error('password_strength')
+            raise UserError(gettext('password_expiry.password_strength'))
 
     @staticmethod
     def generate_new_password():
@@ -151,12 +143,9 @@ class User(metaclass=PoolMeta):
     def notify_new_password(self, new_password):
         from_addr = config.get('email', 'from')
         to_addr = self.email
-        subject = self.raise_user_error('new_password_title',
-            raise_exception=False)
-        body = self.raise_user_error('new_password_body', {
-                'new_password': new_password,
-                'hostname': HOSTNAME,
-                }, raise_exception=False)
+        subject = gettext('password_expiry.new_password_title')
+        body = gettext('password_expiry.new_password_body',
+            new_password=new_password, hostname=HOSTNAME)
         if not self.email or not self.from_addr:
             return
 

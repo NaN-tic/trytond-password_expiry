@@ -1,31 +1,20 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:res.user:"
-msgid ""
-"The supplied password is not strongh enough, please use a different one."
-msgstr ""
-"La contraseña introducida es demasiado débil. Por favor, utilice una "
-"contraseña distinta."
+msgctxt "model:ir.message,text:password_strength"
+msgid "The supplied password is not strong enough, please use a different one."
+msgstr "La contraseña introducida es demasiado débil. Por favor, utilice una contraseña distinta."
 
-msgctxt "error:res.user:"
-msgid ""
-"Your new password of Tryton server %(hostname)s is %(new_password)s please "
-"login in order to change it."
-msgstr ""
-"Vuestra nueva contraseña del servidor de Tryton %(hostname)s es "
-"%(new_password)s por favor entra para cambiarla."
+msgctxt "model:ir.message,text:new_password_body"
+msgid "Your new password of Tryton server %(hostname)s is %(new_password)s please login in order to change it."
+msgstr "Vuestra nueva contraseña del servidor de Tryton %(hostname)s es %(new_password)s por favor entra para cambiarla."
 
-msgctxt "error:res.user:"
-msgid ""
-"Your password has expired, please change it to a new one from user "
-"preferences."
-msgstr ""
-"Vuestra contraseña ha caducado, por favor cambiadla desde la preferencias de"
-" usuario."
+msgctxt "model:ir.message,text:password_expired"
+msgid "Your password has expired, please change it to a new one from user preferences."
+msgstr "Vuestra contraseña ha caducado, por favor cambiadla desde la preferencias de usuario."
 
-msgctxt "error:res.user:"
+msgctxt "model:ir.message,text:password_expired
 msgid "Your password has been changed."
 msgstr "Tu contraseña se ha modificado."
 

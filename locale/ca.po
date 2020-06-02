@@ -1,32 +1,20 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:res.user:"
-msgid ""
-"The supplied password is not strongh enough, please use a different "
-"one."
-msgstr ""
-"La contrasenya que heu introduït es molt dèbil, si us plau utilitzeu-ne una "
-"de diferent."
+msgctxt "model:ir.message,text:password_strength"
+msgid "The supplied password is not strong enough, please use a different one."
+msgstr "La contrasenya que heu introduït es molt dèbil, si us plau utilitzeu-ne una de diferent."
 
-msgctxt "error:res.user:"
-msgid ""
-"Your new password of Tryton server %(hostname)s is %(new_password)s please "
-"login in order to change it."
-msgstr ""
-"La vostra nova contrasenya al servidor de Tryton %(hostname)s es "
-"%(new_password)s si us plau, entreu per canviar-la."
+msgctxt "model:ir.message,text:new_password_body"
+msgid "Your new password of Tryton server %(hostname)s is %(new_password)s please login in order to change it."
+msgstr "La vostra nova contrasenya al servidor de Tryton %(hostname)s es %(new_password)s si us plau, entreu per canviar-la."
 
-msgctxt "error:res.user:"
-msgid ""
-"Your password has expired, please change it to a new one from user "
-"preferences."
-msgstr ""
-"La vostra contrasenya ha caducat, si us plau renoveu-la des de les "
-"preferències d'usuari. "
+msgctxt "model:ir.message,text:password_expired"
+msgid "Your password has expired, please change it to a new one from user preferences."
+msgstr "La vostra contrasenya ha caducat, si us plau renoveu-la des de les preferències d'usuari. "
 
-msgctxt "error:res.user:"
+msgctxt "model:ir.message,text:password_expired"
 msgid "Your password has been changed."
 msgstr "S'ha canviat la vostra contrasenya."
 

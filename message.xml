@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data grouped="1">
+        <record model="ir.message" id="password_expired">
+            <field name="text">Your password has expired, please change it to a new one from user preferences.</field>
+        </record>
+        <record model="ir.message" id="password_strength">
+            <field name="text">The supplied password is not strong enough, please use a different one.</field>
+        </record>
+        <record model="ir.message" id="new_password_title">
+            <field name="text">Your password has been changed.</field>
+        </record>
+        <record model="ir.message" id="new_password_body">
+            <field name="text">Your new password of Tryton server '%(hostname)s' is %(new_password)s please login in order to change it.</field>
+        </record>
+    </data>
+</tryton>
