@@ -146,7 +146,7 @@ class User(metaclass=PoolMeta):
         subject = gettext('password_expiry.new_password_title')
         body = gettext('password_expiry.new_password_body',
             new_password=new_password, hostname=HOSTNAME)
-        if not self.email or not self.from_addr:
+        if not self.email or not from_addr:
             return
 
         msg = MIMEText(body, _charset='utf-8')
