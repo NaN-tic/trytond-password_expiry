@@ -1,16 +1,16 @@
-# The COPYRIGHT file at the top level of this repository contains the full
-# copyright notices and license terms.
+
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
+
 import datetime
-import unittest
-import trytond.tests.test_tryton
-from trytond.error import UserError
+from trytond.exceptions import UserError
 from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.transaction import Transaction
 
 
-class TestCase(ModuleTestCase):
-    'Test module'
+class PasswordExpiryTestCase(ModuleTestCase):
+    'Test PasswordExpiry module'
     module = 'password_expiry'
 
     def create_user(self, login, password):
@@ -85,7 +85,4 @@ class TestCase(ModuleTestCase):
         self.assertEqual(user_id, None)
 
 
-def suite():
-    suite = trytond.tests.test_tryton.suite()
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestCase))
-    return suite
+del ModuleTestCase
