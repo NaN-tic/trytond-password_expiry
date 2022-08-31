@@ -4,36 +4,39 @@ import datetime
 import logging
 import random
 import string
-from email.mime.text import MIMEText
-from email.header import Header
+import secrets
 from trytond.cache import Cache
 from trytond.config import config
 from trytond.model import fields, ModelView
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
-from trytond.tools import get_smtp_server
-from trytond.url import HOSTNAME
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
+# from trytond.res.user import gen_password
 
 EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
 PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
 
 __all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
 
+def gen_password():
+    choice = secrets.choice
+    characters = []
+    for number, options in [
+            (8, string.ascii_letters),
+            (2, string.digits),
+            (2, string.punctuation),
+            ]:
+        characters += [choice(options) for x in range(number)]
+    random.shuffle(characters)
+    return ''.join(characters)
+
 
 class User(metaclass=PoolMeta):
     __name__ = "res.user"
     last_change_date = fields.DateTime('Last Change Date', required=True)
     _get_last_change_cache = Cache('res_user.last_change_date', context=False)
-
-    @classmethod
-    def __setup__(cls):
-        super(User, cls).__setup__()
-        cls._buttons.update({
-                'reset_password': {},
-                })
 
     @staticmethod
     def default_last_change_date():
@@ -47,7 +50,9 @@ class User(metaclass=PoolMeta):
     @classmethod
     def set_password(cls, users, name, value):
         if not value:
-            value = cls.generate_new_password()
+            # use gen_password method from password_expiry and not from res.user
+            # because random password is more strong (pass check_password_strenght)
+            value = gen_password()
         cls.check_password_strenght(value)
         super(User, cls).set_password(users, name, value)
         current, other = [], []
@@ -109,61 +114,11 @@ class User(metaclass=PoolMeta):
         if strenght < PASSWORD_FACTOR:
             raise UserError(gettext('password_expiry.password_strength'))
 
-    @staticmethod
-    def generate_new_password():
-        characters = []
-        for number, options in [
-                (8, string.ascii_letters),
-                (2, string.digits),
-                (2, string.punctuation),
-                ]:
-            characters += [random.choice(options) for x in range(number)]
-        random.shuffle(characters)
-        new_password = ''.join(characters)
-        return new_password
-
     @classmethod
     @ModelView.button
-    def reset_password(cls, users):
-        to_write = []
-        for user in users:
-            to_write.extend(([user], {
-                        'password': cls.generate_new_password(),
-                        }))
-        if to_write:
-            cls.write(*to_write)
-            # Force password expiration
-            cls.write(users, {'last_change_date': datetime.datetime.min})
-            # Don't notify in the users until all is done
-            actions = iter(to_write)
-            for users, values in zip(actions, actions):
-                for user in users:
-                    user.notify_new_password(values['password'])
-
-    def notify_new_password(self, new_password):
-        from_addr = config.get('email', 'from')
-        to_addr = self.email
-        subject = gettext('password_expiry.new_password_title')
-        body = gettext('password_expiry.new_password_body',
-            new_password=new_password, hostname=HOSTNAME)
-        if not self.email or not from_addr:
-            return
-
-        msg = MIMEText(body, _charset='utf-8')
-        msg['To'] = to_addr
-        msg['From'] = from_addr
-        msg['Subject'] = Header(subject, 'utf-8')
-        logger = logging.getLogger(__name__)
-        if not to_addr:
-            logger.error(msg.as_string())
-        else:
-            try:
-                server = get_smtp_server()
-                server.sendmail(from_addr, to_addr, msg.as_string())
-                server.quit()
-            except Exception as exception:
-                logger.error('Unable to deliver email (%s):\n %s'
-                    % (exception, msg.as_string()))
+    def reset_password(cls, users, length=8, from_=None):
+        super().reset_password(users, length, from_)
+        cls.write(users, {'last_change_date': datetime.datetime.now()})
 
     @classmethod
     def create(cls, vlist):

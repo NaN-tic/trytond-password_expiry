@@ -74,10 +74,6 @@ class PasswordExpiryTestCase(ModuleTestCase):
 
         User.reset_password([user])
 
-        with Transaction().set_user(user_id):
-            actions = User.get_preferences()['actions']
-        self.assertEqual(actions[0], expired_password_action)
-
         # Nothing is raised if user does not exist
         user_id = User.get_login('login', {
                 'password': complex_password,
