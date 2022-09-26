@@ -141,8 +141,8 @@ class User(metaclass=PoolMeta):
 class ExpiredPasswordStart(ModelView):
     'Expired Password Start'
     __name__ = 'res.user.expired_password.start'
-    old_password = fields.Char('Old Password', required=True)
-    password = fields.Char('Password', required=True)
+    old_password = fields.Char('Old Password', required=True, strip=False)
+    password = fields.Char('Password', required=True, strip=False)
 
 
 class ExpiredPassword(Wizard):
