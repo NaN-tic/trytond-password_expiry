@@ -13,12 +13,13 @@ from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
-# from trytond.res.user import gen_password
+from trytond.res.user import _send_email
 
 EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
 PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
 
-__all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
+class WeakPassword(UserError):
+    pass
 
 def gen_password():
     choice = secrets.choice
@@ -51,9 +52,9 @@ class User(metaclass=PoolMeta):
     def set_password(cls, users, name, value):
         if not value:
             # use gen_password method from password_expiry and not from res.user
-            # because random password is more strong (pass check_password_strenght)
+            # because random password is more strong (pass check_password_strength)
             value = gen_password()
-        cls.check_password_strenght(value)
+        cls.check_password_strength(value)
         super(User, cls).set_password(users, name, value)
         current, other = [], []
         user_id = Transaction().user
@@ -102,30 +103,44 @@ class User(metaclass=PoolMeta):
         return result
 
     @classmethod
-    def check_password_strenght(cls, password):
+    def check_password_strength(cls, password):
         try:
             import passwordmeter
         except ImportError:
             logger = logging.getLogger('res.user')
-            logger.warn('Unable to check password strenght. Please install '
+            logger.warn('Unable to check password strength. Please install '
                 'passwordmeter library')
             return
-        strenght, suggestions = passwordmeter.test(password)
-        if strenght < PASSWORD_FACTOR:
+<<<<<<< HEAD
+        strength, suggestions = passwordmeter.test(password)
+        if strength < PASSWORD_FACTOR:
             raise UserError(gettext('password_expiry.password_strength'))
+=======
+        strength, suggestions = passwordmeter.test(password)
+        if strength < PASSWORD_FACTOR:
+            raise WeakPassword(gettext('password_expiry.password_strength'))
+>>>>>>> 7b322da (Reimplement reset_password() to avoid test failures with weak passwords.)
 
     @classmethod
     @ModelView.button
     def reset_password(cls, users, length=8, from_=None):
-        super().reset_password(users, length, from_)
-        cls.write(users, {'last_change_date': datetime.datetime.now()})
+        # Do not call super() because we must use our own gen_password method
+        for user in users:
+            user.password_reset = gen_password(length=length)
+            user.password_reset_expire = (
+                datetime.datetime.now() + datetime.timedelta(
+                    seconds=config.getint('password', 'reset_timeout')))
+            user.password = None
+            user.last_change_date = datetime.datetime.now()
+        cls.save(users)
+        _send_email(from_, users, cls.get_email_reset_password)
 
     @classmethod
     def create(cls, vlist):
         for value in vlist:
             if value.get('password'):
                 # Force validation before creation
-                cls.check_password_strenght(value.get('password'))
+                cls.check_password_strength(value.get('password'))
         instances = super(User, cls).create(vlist)
         # Restart the cache for _get_last_change
         cls._get_last_change_cache.clear()
