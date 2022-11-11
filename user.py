@@ -51,9 +51,9 @@ class User(metaclass=PoolMeta):
     def set_password(cls, users, name, value):
         if not value:
             # use gen_password method from password_expiry and not from res.user
-            # because random password is more strong (pass check_password_strenght)
+            # because random password is more strong (pass check_password_strength)
             value = gen_password()
-        cls.check_password_strenght(value)
+        cls.check_password_strength(value)
         super(User, cls).set_password(users, name, value)
         current, other = [], []
         user_id = Transaction().user
@@ -102,16 +102,16 @@ class User(metaclass=PoolMeta):
         return result
 
     @classmethod
-    def check_password_strenght(cls, password):
+    def check_password_strength(cls, password):
         try:
             import passwordmeter
         except ImportError:
             logger = logging.getLogger('res.user')
-            logger.warn('Unable to check password strenght. Please install '
+            logger.warn('Unable to check password strength. Please install '
                 'passwordmeter library')
             return
-        strenght, suggestions = passwordmeter.test(password)
-        if strenght < PASSWORD_FACTOR:
+        strength, suggestions = passwordmeter.test(password)
+        if strength < PASSWORD_FACTOR:
             raise UserError(gettext('password_expiry.password_strength'))
 
     @classmethod
@@ -125,7 +125,7 @@ class User(metaclass=PoolMeta):
         for value in vlist:
             if value.get('password'):
                 # Force validation before creation
-                cls.check_password_strenght(value.get('password'))
+                cls.check_password_strength(value.get('password'))
         instances = super(User, cls).create(vlist)
         # Restart the cache for _get_last_change
         cls._get_last_change_cache.clear()
