@@ -13,12 +13,13 @@ from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
-# from trytond.res.user import gen_password
+from trytond.res.user import _send_email
 
 EXPIRY_DAYS = config.getint('security', 'password_expiry_days', default=365)
 PASSWORD_FACTOR = config.getfloat('security', 'password_factor', default=0.75)
 
-__all__ = ['User', 'ExpiredPasswordStart', 'ExpiredPassword']
+class WeakPassword(UserError):
+    pass
 
 def gen_password():
     choice = secrets.choice
@@ -112,13 +113,21 @@ class User(metaclass=PoolMeta):
             return
         strength, suggestions = passwordmeter.test(password)
         if strength < PASSWORD_FACTOR:
-            raise UserError(gettext('password_expiry.password_strength'))
+            raise WeakPassword(gettext('password_expiry.password_strength'))
 
     @classmethod
     @ModelView.button
     def reset_password(cls, users, length=8, from_=None):
-        super().reset_password(users, length, from_)
-        cls.write(users, {'last_change_date': datetime.datetime.now()})
+        # Do not call super() because we must use our own gen_password method
+        for user in users:
+            user.password_reset = gen_password(length=length)
+            user.password_reset_expire = (
+                datetime.datetime.now() + datetime.timedelta(
+                    seconds=config.getint('password', 'reset_timeout')))
+            user.password = None
+            user.last_change_date = datetime.datetime.now()
+        cls.save(users)
+        _send_email(from_, users, cls.get_email_reset_password)
 
     @classmethod
     def create(cls, vlist):
