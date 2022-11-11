@@ -111,15 +111,9 @@ class User(metaclass=PoolMeta):
             logger.warn('Unable to check password strength. Please install '
                 'passwordmeter library')
             return
-<<<<<<< HEAD
-        strength, suggestions = passwordmeter.test(password)
-        if strength < PASSWORD_FACTOR:
-            raise UserError(gettext('password_expiry.password_strength'))
-=======
         strength, suggestions = passwordmeter.test(password)
         if strength < PASSWORD_FACTOR:
             raise WeakPassword(gettext('password_expiry.password_strength'))
->>>>>>> 7b322da (Reimplement reset_password() to avoid test failures with weak passwords.)
 
     @classmethod
     @ModelView.button
