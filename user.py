@@ -120,7 +120,7 @@ class User(metaclass=PoolMeta):
     def reset_password(cls, users, length=8, from_=None):
         # Do not call super() because we must use our own gen_password method
         for user in users:
-            user.password_reset = gen_password(length=length)
+            user.password_reset = gen_password()
             user.password_reset_expire = (
                 datetime.datetime.now() + datetime.timedelta(
                     seconds=config.getint('password', 'reset_timeout')))
